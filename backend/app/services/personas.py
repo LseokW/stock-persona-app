@@ -150,21 +150,17 @@ class AIPersona(Persona):
     """
     AI형 — LSTM 모델 예측 기반.
 
-    매수 조건: 상승 확률 p > 0.55
+    매수 조건: 상승 확률 p > 0.48
     포지션: 자본의 50%
-    매도 조건: p < 0.45
-
-    주의: 현재 학습된 모델의 예측이 0.3~0.5에 집중되어 있어
-    이 임계값 기준으로는 거의 매매가 발생하지 않을 수 있다.
-    이는 예상된 동작이며 결과의 일부로 보고한다.
+    매도 조건: p < 0.42
     """
 
     id = "ai"
     name = "AI형"
     type = "ml_based"
 
-    BUY_THRESHOLD = 0.55
-    SELL_THRESHOLD = 0.45
+    BUY_THRESHOLD = 0.48
+    SELL_THRESHOLD = 0.42
 
     def decide(self, ctx: DecisionContext) -> Action:
         if ctx.predictor is None:

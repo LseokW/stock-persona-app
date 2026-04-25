@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+yfinance
+pandas>=2.0
+pyarrow
+torch>=2.0
+numpy
+matplotlib
+pydantic

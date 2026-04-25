@@ -206,7 +206,7 @@ def test_ai_buys_on_high_probability():
 
     class FakePredictor:
         def predict(self, window_df):
-            return 0.80  # BUY_THRESHOLD(0.55) 초과
+            return 0.80  # BUY_THRESHOLD(0.48) 초과
 
     ai = AIPersona()
     df = make_df([100.0] * 30)
