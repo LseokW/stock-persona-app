@@ -62,6 +62,37 @@ uv run uvicorn app.main:app --reload --port 8000
 uv run pytest tests/ -v
 ```
 
+## 향후 개선 사항
+
+### AI 페르소나 (LSTM 모델) 개선 필요
+
+현재 모델은 사실상 학습이 실패한 상태이다.
+
+**증상**
+- BCE Loss ≈ 0.693 (= ln(2)): 모델이 모든 입력에 대해 p ≈ 0.5 출력 (아무것도 학습 안 함)
+- Val accuracy 47.5% < 50% (random baseline): 랜덤보다 못함
+- Early stopping이 epoch 6에서 조기 종료
+
+**근본 원인**
+- 피처 부족: log_return, range_ratio, log_volume 3개만 사용. 방향 예측 신호가 너무 약함
+- 데이터 부족: 2년 1개 종목 hourly ≈ 학습 샘플 ~2,000개
+- pos_weight 미설정: 상승/하락 라벨 불균형 시 gradient 평균이 0 수렴
+- 모델 출력이 항상 0.47 근방에 몰려 있어 BUY_THRESHOLD / SELL_THRESHOLD를 의미 있게 넘지 못함
+
+**개선 방향**
+
+| 우선순위 | 항목 | 내용 |
+|---------|------|------|
+| 상 | 피처 추가 | RSI(14), MACD histogram, Bollinger Band position 추가 → input_size 3→6 |
+| 상 | 데이터 확대 | 학습 기간 2년→5년, 단일 종목→다중 종목(SPY/QQQ/AAPL 등) |
+| 중 | pos_weight 적용 | 라벨 비율 계산 후 `BCEWithLogitsLoss(pos_weight=...)` 설정 |
+| 중 | LR 조정 | 1e-3 → 3e-4, ReduceLROnPlateau 스케줄러 추가 |
+| 하 | 대안 구조 | LSTM 대신 RSI+MACD 조합 규칙 기반으로 AI 페르소나 교체 검토 |
+
+> 현실적 기대치: 1시간봉 방향 예측은 전문 퀀트도 52~53%면 우수. 목표는 50% 이상의 안정적 신호.
+
+---
+
 ## 기타 스크립트
 
 ```bash

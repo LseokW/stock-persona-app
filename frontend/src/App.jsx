@@ -8,6 +8,9 @@ import Dashboard from "./pages/Dashboard";
 import Checkout from "./pages/Checkout";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
 import BacktestPage from "./pages/BacktestPage";
+import PersonaDetailPage from "./pages/PersonaDetailPage";
+import GuidePage from "./pages/GuidePage";
+import LSTMGuidePage from "./pages/LSTMGuidePage";
 
 function RootRedirect() {
   const { user, isLoading } = useAuth();
@@ -53,6 +56,16 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/persona/:persona"
+          element={
+            <ProtectedRoute>
+              <PersonaDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/guide" element={<GuidePage />} />
+        <Route path="/lstm-guide" element={<LSTMGuidePage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AuthProvider>

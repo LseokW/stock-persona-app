@@ -25,6 +25,42 @@
   }
 }
 
+@layer base {
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #8B5CF6;
+    box-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
+    cursor: pointer;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #8B5CF6;
+    box-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
+    cursor: pointer;
+    border: none;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.fade-section {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.fade-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 @layer components {
   .glass-card {
     background: rgba(255, 255, 255, 0.04);

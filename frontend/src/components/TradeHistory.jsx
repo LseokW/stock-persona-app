@@ -30,9 +30,10 @@ export default function TradeHistory({ result }) {
       </div>
 
       {active.trades.length === 0 ? (
-        <p className="text-sm text-slate-500 py-8 text-center">
-          거래가 발생하지 않았습니다.
-        </p>
+        <div className="py-8 text-center">
+          <p className="text-sm text-slate-500">거래가 발생하지 않았습니다.</p>
+          <p className="text-sm text-emerald-400 font-semibold mt-1.5">이것이 정답입니다!</p>
+        </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

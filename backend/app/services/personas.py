@@ -56,7 +56,7 @@ class Coward(Persona):
     """
 
     id = "coward"
-    name = "겁쟁이"
+    name = "신중함"
     type = "rule_based"
 
     def decide(self, ctx: DecisionContext) -> Action:
@@ -92,7 +92,7 @@ class Beast(Persona):
     """
 
     id = "beast"
-    name = "야수"
+    name = "야수의 심장"
     type = "rule_based"
 
     def decide(self, ctx: DecisionContext) -> Action:
@@ -124,7 +124,7 @@ class Contrarian(Persona):
     """
 
     id = "contrarian"
-    name = "청개구리"
+    name = "공포에 투자"
     type = "rule_based"
 
     def decide(self, ctx: DecisionContext) -> Action:
@@ -150,34 +150,47 @@ class AIPersona(Persona):
     """
     AI형 — LSTM 모델 예측 기반.
 
-    매수 조건: 상승 확률 p > 0.48
+    매수 조건: 상승 확률 p > 0.45
     포지션: 자본의 50%
-    매도 조건: p < 0.42
+    매도 조건: p < 0.50 (불확실 시 매도) 또는 48캔들 초과 보유 시 강제 매도
+    최소 보유: 4캔들 (너무 잦은 청산 방지)
     """
 
     id = "ai"
-    name = "AI형"
+    name = "초보 예언가"
     type = "ml_based"
 
-    BUY_THRESHOLD = 0.48
-    SELL_THRESHOLD = 0.42
+    BUY_THRESHOLD = 0.55
+    SELL_THRESHOLD = 0.44
+    MIN_HOLD_CANDLES = 1
+    MAX_HOLD_CANDLES = 48
+
+    def __init__(self):
+        self._hold_start_len: int | None = None
 
     def decide(self, ctx: DecisionContext) -> Action:
         if ctx.predictor is None:
             return HOLD
 
-        window = ctx.history.tail(24)
-        if len(window) < 24:
+        window = ctx.history.tail(60)
+        if len(window) < 60:
             return HOLD
 
         p = ctx.predictor.predict(window)
+        current_len = len(ctx.history)
 
-        if not ctx.state.holding and p > self.BUY_THRESHOLD:
-            shares = ctx.state.cash * 0.50 / ctx.current_price
-            return BUY(shares)
-
-        if ctx.state.holding and p < self.SELL_THRESHOLD:
-            return SELL_ALL
+        if not ctx.state.holding:
+            self._hold_start_len = None
+            if p > self.BUY_THRESHOLD:
+                self._hold_start_len = current_len
+                shares = ctx.state.cash * 0.50 / ctx.current_price
+                return BUY(shares)
+        else:
+            held = current_len - self._hold_start_len if self._hold_start_len else 0
+            if held >= self.MAX_HOLD_CANDLES:
+                return SELL_ALL
+            if held >= self.MIN_HOLD_CANDLES and p < self.SELL_THRESHOLD:
+                return SELL_ALL
 
         return HOLD
 

@@ -25,6 +25,7 @@ _SP500_WHITELIST = {
     "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA",
     "META", "TSLA", "JPM", "V", "WMT",
 }
+SP500_TICKERS = sorted(_SP500_WHITELIST)
 
 # 미국 정규장 시간: 09:30 ~ 16:00 ET
 _MARKET_OPEN = datetime.time(9, 30)
@@ -94,13 +95,17 @@ def load_ohlcv(ticker: str, period_months: int = 6) -> pd.DataFrame:
         return pd.read_parquet(cache_path)
 
     # --- 2단계: yfinance로 다운로드 ---
-    period_str = f"{period_months}mo"
-    print(f"[download] {ticker} {period_str} 1h 봉 다운로드 중...")
+    # yfinance 1h 봉은 최대 730일 제한 → 날짜 기반 다운로드로 안전하게 처리
+    end_date = datetime.date.today()
+    days_back = min(period_months * 30, 720)  # 720일로 캡: 730일 제한에 여유 확보
+    start_date = end_date - datetime.timedelta(days=days_back)
+    print(f"[download] {ticker} {start_date}~{end_date} 1h 봉 다운로드 중...")
 
     try:
         raw = yf.download(
             ticker,
-            period=period_str,
+            start=start_date.isoformat(),
+            end=end_date.isoformat(),
             interval="1h",
             auto_adjust=True,   # 주식 분할·배당 자동 조정
             progress=False,     # 터미널 진행 바 숨김
