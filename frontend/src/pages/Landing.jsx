@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import {
   ShieldAlert, Flame, ArrowDownUp, Cpu, ArrowRight, BarChart2,
-  TrendingUp, Clock, Zap, Shield, Brain
+  TrendingUp, Clock, Zap, Shield, Brain, Users
 } from "lucide-react";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
@@ -15,16 +15,16 @@ const PERSONAS = [
     risk: 1,
   },
   {
-    icon: Flame,
-    name: "야수의 심장",
-    color: "#EF4444",
+    icon: Users,
+    name: "개미",
+    color: "#10B981",
     desc: "모멘텀 80% 매수, 즉시 손절",
     risk: 5,
   },
   {
-    icon: ArrowDownUp,
-    name: "공포에 투자",
-    color: "#10B981",
+    icon: Flame,
+    name: "야수의 심장",
+    color: "#EF4444",
     desc: "급락 반등 기대 역발상 전략",
     risk: 3,
   },
@@ -107,7 +107,7 @@ export default function Landing() {
           <div className="flex items-center gap-2">
             <BarChart2 size={16} className="text-violet-400" />
             <span className="text-sm font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent tracking-tight">
-              단타 페르소나 백테스트
+              Swing Trading 백테스트
             </span>
           </div>
           <button
@@ -129,7 +129,7 @@ export default function Landing() {
 
         {/* 제목 */}
         <h1 className="text-4xl sm:text-6xl font-extrabold leading-tight mb-6 bg-gradient-to-b from-white via-white to-slate-400 bg-clip-text text-transparent">
-          단타란 이런 것이다 !!!
+          단기 보유 백테스팅
         </h1>
 
         {/* 부제 */}
@@ -157,30 +157,82 @@ export default function Landing() {
         <p className="text-[11px] text-slate-500">실제 시장 데이터 기반 · 페르소나별 전략 차이를 직접 확인</p>
       </section>
 
-      {/* 단타의 현실 */}
+      {/* Swing Trading 정의 */}
       <section className="fade-section relative z-10 px-6 pb-20 border-t border-white/[0.06]">
         <div className="max-w-4xl mx-auto pt-16">
-          <h2 className="text-center text-xl font-bold text-white mb-2">단타의 현실</h2>
-          <p className="text-center text-sm text-slate-500 mb-10">재미로 보는 거 맞는데, 그래도 알고는 있어요</p>
+          <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full mb-6">
+            <TrendingUp size={12} />
+            개념 정리
+          </div>
+          <h2 className="text-xl font-bold text-white mb-2">Swing Trading이란?</h2>
+          <p className="text-sm text-slate-400 mb-8 leading-relaxed max-w-2xl">
+            수시간에서 수주 단위로 포지션을 유지하며 <span className="text-white font-semibold">단기 가격 흐름</span>에서 수익을 추구하는 전략입니다.
+            장기 투자(Buy &amp; Hold)와 초단타(Day Trading) 사이의 중간 영역에 위치합니다.
+          </p>
+
+          {/* 비교 테이블 */}
+          <div className="overflow-x-auto rounded-2xl border border-white/[0.08] mb-8">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-white/[0.08] bg-white/[0.03]">
+                  <th className="px-5 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wide w-1/3">구분</th>
+                  <th className="px-5 py-3 text-left text-xs font-bold text-emerald-400 uppercase tracking-wide w-1/3">Swing Trading</th>
+                  <th className="px-5 py-3 text-left text-xs font-bold text-red-400 uppercase tracking-wide w-1/3">Day Trading (단타)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["보유 기간",   "수시간 ~ 수주",          "당일 내 전량 청산"],
+                  ["분석 방법",   "기술적 분석 + 차트 패턴", "틱 차트, 초단기 모멘텀"],
+                  ["모니터링",    "하루 몇 번 확인",         "시장 시간 내내 집중"],
+                  ["스트레스",    "상대적으로 낮음",         "매우 높음"],
+                  ["진입 빈도",   "기회 선별, 적게 거래",    "매우 잦은 거래"],
+                  ["이 앱 기준",  "최대 48봉(약 2거래일)",   "12봉(12시간) 이내 청산"],
+                ].map(([label, swing, day]) => (
+                  <tr key={label} className="border-b border-white/[0.05] last:border-0 hover:bg-white/[0.02]">
+                    <td className="px-5 py-3 text-slate-500 text-xs font-semibold">{label}</td>
+                    <td className="px-5 py-3 text-slate-200 text-xs">{swing}</td>
+                    <td className="px-5 py-3 text-slate-400 text-xs">{day}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="bg-emerald-500/[0.06] border border-emerald-500/20 rounded-2xl px-6 py-4">
+            <p className="text-sm text-slate-300 leading-relaxed">
+              <span className="text-emerald-400 font-semibold">핵심 차이:</span>{" "}
+              Day Trading은 하루 안에 모든 포지션을 닫아야 하지만, Swing Trading은 며칠에 걸쳐 추세를 타도 됩니다.
+              덜 바쁘고 덜 위험하며, 기관 알고리즘과 직접 부딪히지 않아도 됩니다.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 스캘핑·단타의 현실 */}
+      <section className="fade-section relative z-10 px-6 pb-20 border-t border-white/[0.06]">
+        <div className="max-w-4xl mx-auto pt-16">
+          <h2 className="text-center text-xl font-bold text-white mb-2">스캘핑 &amp; 단타의 현실</h2>
+          <p className="text-center text-sm text-slate-500 mb-10">Swing Trading보다 짧게 들어가면 이런 일이 생겨요</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             {[
               {
                 stat: "97%",
                 label: "300일 이상 단타한 사람 중 손실",
-                desc: "브라질 선물 시장 연구예요. 꾸준히 할수록 더 잃어요.",
+                desc: "브라질 선물 시장 연구 (Fang et al., 2017). 꾸준히 할수록 더 잃습니다.",
                 color: "#EF4444",
+              },
+              {
+                stat: "0.3 초",
+                label: "기관 HFT의 평균 반응 속도",
+                desc: "스캘퍼가 클릭하는 순간 알고리즘은 이미 수십 번 거래했습니다. 속도 싸움에서 개인은 집니다.",
+                color: "#F97316",
               },
               {
                 stat: "수수료",
                 label: "조용히 다 먹고 가요",
-                desc: "거래할수록 증권사만 확실하게 수익 내요. 이 앱도 0.05% 적용돼요.",
-                color: "#F97316",
-              },
-              {
-                stat: "Buy & Hold",
-                label: "대부분의 단타보다 나아요",
-                desc: "그냥 사서 들고 있는 게 웬만한 전략을 이겨요. 직접 확인해 보세요.",
+                desc: "1일 10회 거래 시 연간 수익의 상당 부분이 수수료로 빠집니다. 이 앱도 0.05% 적용돼요.",
                 color: "#F59E0B",
               },
             ].map(({ stat, label, desc, color }) => (
@@ -196,10 +248,11 @@ export default function Landing() {
             ))}
           </div>
 
-          <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl px-6 py-5 text-center">
-            <p className="text-sm text-slate-400 leading-relaxed">
-              그래도 단타를 해보고 싶다면 —{" "}
-              <span className="text-white font-semibold">최소한 전략이 실제로 어떻게 망하는지는 보고 시작해요.</span>
+          <div className="bg-red-500/[0.06] border border-red-500/20 rounded-2xl px-6 py-5">
+            <p className="text-sm text-slate-300 leading-relaxed text-center">
+              <span className="text-red-400 font-semibold">결론:</span>{" "}
+              스캘핑·단타는 기관과 알고리즘이 지배하는 영역입니다.{" "}
+              <span className="text-white font-semibold">Swing Trading은 그나마 개인이 싸울 수 있는 시간대입니다.</span>
             </p>
           </div>
         </div>
@@ -309,7 +362,7 @@ export default function Landing() {
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <BarChart2 size={13} className="text-slate-600" />
-            <span className="text-xs text-slate-600 font-medium">단타란 이런 것이다 !!!</span>
+            <span className="text-xs text-slate-600 font-medium">단기 보유 백테스팅</span>
           </div>
           <p className="text-[11px] text-slate-700">
             이 서비스는 교육 목적으로 제작되었으며 투자 조언이 아닙니다.

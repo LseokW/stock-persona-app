@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ReferenceLine, ResponsiveContainer, Cell,
 } from "recharts";
-import { BarChart2, Loader2 } from "lucide-react";
+import { BarChart2, Loader2, RotateCcw, RefreshCw } from "lucide-react";
 import { PERSONAS } from "../constants/personas";
 import apiClient from "../api/client";
 
@@ -38,17 +38,29 @@ function CustomTooltip({ active, payload }) {
 }
 
 export default function AllTickersChart({ persona, aiParams }) {
-  const [data, setData]       = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState(null);
-  const [sortKey, setSortKey] = useState("total_return_pct");
+  const [data, setData]           = useState(null);
+  const [loading, setLoading]     = useState(false);
+  const [error, setError]         = useState(null);
+  const [sortKey, setSortKey]     = useState("total_return_pct");
+  const [paramsDirty, setParamsDirty] = useState(false);
+  const usedParamsRef = useRef(null);
 
   const meta = PERSONAS[persona];
+
+  // aiParams가 바뀌면 결과가 오래됐다고 표시
+  useEffect(() => {
+    if (!data || !usedParamsRef.current) return;
+    const prev = usedParamsRef.current;
+    const changed = aiParams && Object.keys(aiParams).some((k) => aiParams[k] !== prev[k]);
+    setParamsDirty(!!changed);
+  }, [aiParams, data]);
 
   const handleFetch = async () => {
     setLoading(true);
     setError(null);
     setData(null);
+    setParamsDirty(false);
+    usedParamsRef.current = aiParams ? { ...aiParams } : null;
     try {
       const body = {
         persona,
@@ -65,6 +77,13 @@ export default function AllTickersChart({ persona, aiParams }) {
     }
   };
 
+  const handleReset = () => {
+    setData(null);
+    setError(null);
+    setParamsDirty(false);
+    usedParamsRef.current = null;
+  };
+
   const sorted = data
     ? [...data.tickers].sort((a, b) =>
         sortKey === "mdd_pct"
@@ -75,47 +94,74 @@ export default function AllTickersChart({ persona, aiParams }) {
 
   return (
     <div className="glass-card rounded-2xl p-5" style={{ borderTop: `2px solid ${meta.color}50` }}>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <div className="flex items-center gap-2">
           <BarChart2 size={14} style={{ color: meta.color }} />
           <span className="text-xs font-bold text-slate-200 uppercase tracking-wide">
             전체 종목 한눈에
           </span>
+          {paramsDirty && (
+            <span className="flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">
+              ⚠ 파라미터 변경됨 — 재실행 필요
+            </span>
+          )}
         </div>
 
-        {!data && !loading && (
-          <button
-            onClick={handleFetch}
-            className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 hover:opacity-90 active:scale-95"
-            style={{
-              backgroundColor: meta.color,
-              color: "#fff",
-              boxShadow: `0 0 16px ${meta.color}40`,
-            }}
-          >
-            <BarChart2 size={12} />
-            10개 종목 분석 시작
-          </button>
-        )}
+        <div className="flex items-center gap-1.5">
+          {!data && !loading && (
+            <button
+              onClick={handleFetch}
+              className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-200 hover:opacity-90 active:scale-95"
+              style={{
+                backgroundColor: meta.color,
+                color: "#fff",
+                boxShadow: `0 0 16px ${meta.color}40`,
+              }}
+            >
+              <BarChart2 size={12} />
+              10개 종목 분석 시작
+            </button>
+          )}
 
-        {data && (
-          <div className="flex gap-1">
-            {SORT_OPTIONS.map((o) => (
+          {data && (
+            <>
+              {SORT_OPTIONS.map((o) => (
+                <button
+                  key={o.key}
+                  onClick={() => setSortKey(o.key)}
+                  className="text-[10px] font-semibold px-2.5 py-1 rounded-lg transition-all"
+                  style={{
+                    backgroundColor: sortKey === o.key ? meta.color + "25" : "rgba(255,255,255,0.05)",
+                    color: sortKey === o.key ? meta.color : "#64748B",
+                    border: `1px solid ${sortKey === o.key ? meta.color + "60" : "transparent"}`,
+                  }}
+                >
+                  {o.label}
+                </button>
+              ))}
+              <div className="w-px h-4 bg-white/10 mx-1" />
               <button
-                key={o.key}
-                onClick={() => setSortKey(o.key)}
-                className="text-[10px] font-semibold px-2.5 py-1 rounded-lg transition-all"
+                onClick={handleFetch}
+                className="flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-lg border transition-all hover:opacity-90"
                 style={{
-                  backgroundColor: sortKey === o.key ? meta.color + "25" : "rgba(255,255,255,0.05)",
-                  color: sortKey === o.key ? meta.color : "#64748B",
-                  border: `1px solid ${sortKey === o.key ? meta.color + "60" : "transparent"}`,
+                  backgroundColor: paramsDirty ? meta.color + "20" : "rgba(255,255,255,0.05)",
+                  color: paramsDirty ? meta.color : "#64748B",
+                  borderColor: paramsDirty ? meta.color + "60" : "transparent",
                 }}
               >
-                {o.label}
+                <RefreshCw size={10} />
+                재실행
               </button>
-            ))}
-          </div>
-        )}
+              <button
+                onClick={handleReset}
+                className="flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-lg border border-transparent text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-all"
+              >
+                <RotateCcw size={10} />
+                초기화
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       {loading && (
@@ -210,12 +256,6 @@ export default function AllTickersChart({ persona, aiParams }) {
             </BarChart>
           </ResponsiveContainer>
 
-          <button
-            onClick={handleFetch}
-            className="mt-3 w-full py-2 rounded-xl text-xs text-slate-500 hover:text-slate-300 hover:bg-white/5 transition-all"
-          >
-            다시 분석
-          </button>
         </>
       )}
     </div>

@@ -9,8 +9,8 @@ const ALL_DISPLAY = [FREE_PERSONA, ...PAID_PERSONAS];
 export default function Dashboard() {
   const { purchasedPersonas, user } = useAuth();
 
-  const totalOwned = [FREE_PERSONA, ...purchasedPersonas].length;
-  const totalPersonas = ALL_DISPLAY.length;
+  const totalOwned = purchasedPersonas.length;
+  const totalPersonas = PAID_PERSONAS.length;
 
   return (
     <div className="min-h-screen bg-[#0D1117]">

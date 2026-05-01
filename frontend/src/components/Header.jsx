@@ -11,7 +11,7 @@ export default function Header() {
         <Link to="/dashboard" className="flex items-center gap-2 font-bold">
           <BarChart2 size={18} className="text-violet-400" />
           <span className="text-sm tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-            단타 페르소나 백테스트
+            Swing Trading 백테스트
           </span>
         </Link>
 

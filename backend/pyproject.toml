@@ -19,6 +19,7 @@ dependencies = [
     "python-multipart>=0.0.9",
     "pydantic-settings>=2.0",
     "polar-sdk>=0.31.3",
+    "pyside6>=6.11.0",
 ]
 
 [dependency-groups]

@@ -231,8 +231,8 @@ export default function GuidePage() {
                 traits="특징: 거래 빈도 낮음, MDD 작음, 횡보장에서 거래 거의 없음"
               />
               <PersonaBlock
-                icon="🔥"
-                name="야수의 심장 (Beast)"
+                icon="👥"
+                name="개미 (Beast)"
                 color="#EF4444"
                 strategy={`매수 조건:
   - 직전 3봉 수익률 합계 > +0.5% (3시간 연속 상승 모멘텀)
@@ -243,8 +243,8 @@ export default function GuidePage() {
                 traits="특징: 거래 빈도 높음, MDD 큼, 강한 추세장에서 강함"
               />
               <PersonaBlock
-                icon="🔄"
-                name="공포에 투자 (Contrarian)"
+                icon="🔥"
+                name="야수의 심장 (Contrarian)"
                 color="#10B981"
                 strategy={`매수 조건:
   - 직전 1봉 수익률 < -1% (1시간 내 급락)

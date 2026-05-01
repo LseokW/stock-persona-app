@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
-  ChevronLeft, ShieldAlert, Flame, ArrowDownUp, Cpu, Shuffle,
+  ChevronLeft, ShieldAlert, Flame, ArrowDownUp, Cpu, Shuffle, Users,
   PlayCircle, Lock, AlertTriangle, CheckCircle2, XCircle,
   TrendingUp, Info, Zap
 } from "lucide-react";
@@ -8,7 +8,7 @@ import Header from "../components/Header";
 import { useAuth } from "../hooks/useAuth";
 import { PERSONAS, FREE_PERSONA } from "../constants/personas";
 
-const ICON_MAP = { ShieldAlert, Flame, ArrowDownUp, Cpu, Shuffle };
+const ICON_MAP = { ShieldAlert, Flame, ArrowDownUp, Cpu, Shuffle, Users };
 
 const RISK_LABELS = ["", "매우 낮음", "낮음", "보통", "높음", "매우 높음"];
 const RISK_COLORS = ["", "#10B981", "#3B82F6", "#F59E0B", "#F97316", "#EF4444"];

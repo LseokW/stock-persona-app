@@ -1,8 +1,8 @@
-import { ShieldAlert, Flame, ArrowDownUp, Cpu, Shuffle, Layers, Lock, PlayCircle, Info, Zap } from "lucide-react";
+import { ShieldAlert, Flame, ArrowDownUp, Cpu, Shuffle, Layers, Lock, PlayCircle, Info, Zap, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PERSONAS, FREE_PERSONA, PAID_PERSONAS } from "../constants/personas";
 
-const ICON_MAP = { ShieldAlert, Flame, ArrowDownUp, Cpu, Shuffle, Layers };
+const ICON_MAP = { ShieldAlert, Flame, ArrowDownUp, Cpu, Shuffle, Layers, Users };
 const RISK_COLORS = ["", "#10B981", "#3B82F6", "#F59E0B", "#F97316", "#EF4444"];
 const RISK_LABELS = ["", "매우 낮음", "낮음", "보통", "높음", "매우 높음"];
 
@@ -29,8 +29,8 @@ function RiskDots({ level }) {
 
 const PERSONA_COLORS = {
   coward: "#3B82F6",
-  beast: "#EF4444",
-  contrarian: "#10B981",
+  beast: "#10B981",
+  contrarian: "#EF4444",
   ai: "#8B5CF6",
 };
 

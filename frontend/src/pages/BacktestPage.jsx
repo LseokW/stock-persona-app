@@ -36,18 +36,25 @@ const PRESETS = [
     params: { buy_threshold: 0.58, sell_threshold: 0.44, min_hold_candles: 2, max_hold_candles: 48 },
   },
   {
-    label: "단타형",
+    label: "스윙형",
     tag: "빠른청산",
     tagColor: "#F97316",
     desc: "상승 확신(53%) 이상 진입, 24h 내 청산",
     params: { buy_threshold: 0.53, sell_threshold: 0.48, min_hold_candles: 1, max_hold_candles: 24 },
   },
   {
-    label: "초단타",
+    label: "초단기 스윙",
     tag: "빠른청산",
     tagColor: "#EF4444",
     desc: "최소 확신(51%)으로 자주 진입, 12h 강제 청산",
     params: { buy_threshold: 0.51, sell_threshold: 0.49, min_hold_candles: 1, max_hold_candles: 12 },
+  },
+  {
+    label: "할만한데?",
+    tag: "극공격적",
+    tagColor: "#EC4899",
+    desc: "모델 출력이 낮아도(42%) 진입. 거래 빈도 최대화, 12h 강제 청산",
+    params: { buy_threshold: 0.42, sell_threshold: 0.36, min_hold_candles: 1, max_hold_candles: 12 },
   },
 ];
 
@@ -101,7 +108,7 @@ function AIParamsPanel({ params, onChange, onReset, activePreset, onPresetSelect
       </div>
 
       {/* 프리셋 버튼 */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-5">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-5">
         {PRESETS.map((preset) => {
           const isActive = activePreset === preset.label;
           return (
