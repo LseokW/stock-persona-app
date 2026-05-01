@@ -3,11 +3,9 @@
 > **"당신의 투자 성향은 수익을 낼 수 있을까요?"**
 > 4가지 AI 페르소나가 동일한 S&P 500 종목을 최근 6개월 동안 어떻게 거래했는지 직접 확인하는 교육용 백테스트 플랫폼.
 
-## 시연 영상
+## 📹 시연 영상
 
-<video src="https://github.com/LseokW/stock-persona-app/releases/download/v1.0/default.mp4" controls width="100%"></video>
-
-> 영상이 로드되지 않으면 [여기서 직접 다운로드](https://github.com/LseokW/stock-persona-app/releases/tag/v1.0)하세요.
+**[▶ 시연 영상 다운로드 (Releases)](https://github.com/LseokW/stock-persona-app/releases/tag/v1.0)**
 
 ---
 
